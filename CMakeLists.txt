@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.10.0)
+project(orderBook VERSION 0.1.0 LANGUAGES C CXX)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Needed for clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_compile_options(-Wall -Wextra -Wpedantic)
+# add_compile_options(-Werror)
+
+
+# Set the output directories for the all binarys
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+add_executable(${PROJECT_NAME} main.cpp)
+
+add_subdirectory(src/order)
+add_subdirectory(src/util)
+add_subdirectory(src/matcher)
+
+
+target_link_libraries(${PROJECT_NAME}
+    order
+    util
+    matcher
+)
