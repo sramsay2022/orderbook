@@ -11,7 +11,8 @@ struct OrderGenerator
     {
         for (int i = 0; i < quant; i++)
         {
-            Order* o{new Order(i % 307, static_cast<double>(i % 439), static_cast<ORDER>(i % 2))};
+            Order* o{new Order(i % 2, static_cast<double>(i % 439), static_cast<Side>(i % 2),
+                               static_cast<Type>(i % 2))};
             orderList.push_back(o);
         }
     }
