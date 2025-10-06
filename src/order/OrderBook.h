@@ -7,7 +7,7 @@
 
 #include "Order.h"
 
-// Compare the for the lowest price then compare for earliest time. FIFO
+// Compare the for the lowest price then compare for earliest time if at same price. FIFO
 struct OrderPtrCmp
 {
     bool operator()(const std::unique_ptr<Order>& o1, const std::unique_ptr<Order>& o2) const
@@ -21,7 +21,7 @@ struct OrderPtrCmp
     }
 };
 
-using OrderBookMultiSet = std::multiset<std::unique_ptr<Order>, OrderPtrCmp>;
+using OrderBookSet = std::set<std::unique_ptr<Order>, OrderPtrCmp>;
 
 class OrderBook
 {
@@ -30,18 +30,20 @@ class OrderBook
 
     void addOrder(std::unique_ptr<Order> order);
     void removeOrder(long long orderID);
-    void fillOrder(std::unique_ptr<Order> o1);
 
     auto peekBestBid() const { return m_buyOrders.begin(); }
     auto peekBestAsk() const { return m_sellOrders.begin(); }
 
+    void removeBid(OrderBookSet::iterator it) { m_buyOrders.erase(it); }
+    void removeAsk(OrderBookSet::iterator it) { m_sellOrders.erase(it); }
+
     void showOrders();
 
  private:
-    OrderBookMultiSet m_buyOrders{};
-    OrderBookMultiSet m_sellOrders{};
+    OrderBookSet m_buyOrders{};
+    OrderBookSet m_sellOrders{};
 
-    std::map<Order, Order> filledOrders{};
+    std::map<Order, Order> filledOrders{};  // TODO
 };
 
 #endif /* DD464386_82F4_4916_9C97_26F8B65EC003 */

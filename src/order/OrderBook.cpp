@@ -16,11 +16,6 @@ void OrderBook::addOrder(std::unique_ptr<Order> order)
 
 void OrderBook::removeOrder(long long orderID) { (void)orderID; }
 
-void OrderBook::fillOrder(std::unique_ptr<Order> o1)
-{
-    cout << "Order1 ID: " << o1->getID() << "Order2 ID: " << o1->getID() << endl;
-}
-
 void OrderBook::showOrders()
 {
     assert(!m_buyOrders.empty());

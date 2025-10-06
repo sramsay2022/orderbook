@@ -31,42 +31,46 @@ void MatchingEngine::match(std::unique_ptr<Order> order)
 
 void MatchingEngine::sell()
 {
-    if (m_currentOrder->getType() == Type::MARKET)
-    {
-        m_ob->peekBestBid();
-    }
-    else
-    {
+    auto bestBid = m_ob->peekBestBid()->get();
+
+    const long long orderID  = m_currentOrder->getID();
+    const double    price    = m_currentOrder->getPrice();
+    const int       quantity = m_currentOrder->getQuantity();
+
+    bool currentOrderFilled{false};
+
+    while (currentOrderFilled)
+    {  // if (m_currentOrder->getType() == Type::MARKET)
+       //   {
+
+        const long long bidID        = bestBid->getID();
+        const double    bestPrice    = bestBid->getPrice();
+        const int       bestQuantity = bestBid->getQuantity();
+
+        completedTrades.push_back(Trade(bidID, orderID, bestPrice, quantity));
+
+        if (quantity <= bestQuantity)
+        {
+            bestBid->setQuantity(bestQuantity - quantity);
+            if (bestQuantity - quantity == 0)
+            {
+                m_ob->removeBid(m_ob->peekBestBid());
+            }
+            m_currentOrder.reset();
+            currentOrderFilled = true;
+        }
+        else
+        {
+            completedTrades.push_back(Trade(bidID, orderID, bestPrice, quantity));
+            m_ob->removeBid(m_ob->peekBestBid());
+
+            bestBid = m_ob->peekBestBid()->get();
+        }
+        //   }
+        //  else
+        {
+        }
     }
 }
 
 void MatchingEngine::buy() {}
-
-// if (order->getSide() == Side::BUY)
-//     {
-//         auto bestAsk = m_ob->peekBestAsk();
-//         if (bestAsk)
-//         {
-//             int diff = bestAsk->getQuantity() - order->getQuantity();
-//             if (diff > 0)
-//             {
-//                 bestAsk->setQuantity(diff);
-//             }
-//             else if (diff < 0)
-//             {
-//                 order->setQuantity(-diff);
-//             }
-
-//             if (diff == 0)
-//             {
-//                 m_ob->fillOrder(std::move(order));
-//             }
-//         }
-//     }
-//     else
-//     {
-//         auto bestBid = m_ob->peekBestBid();
-//         if (bestBid)
-//         {
-//         }
-//     }

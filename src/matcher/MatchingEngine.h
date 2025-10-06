@@ -5,6 +5,7 @@
 
 #include "Order.h"
 #include "OrderBook.h"
+#include "Trade.h"
 
 class MatchingEngine
 {
@@ -22,6 +23,8 @@ class MatchingEngine
     std::unique_ptr<Order>     m_currentOrder{};
 
     double currentPrice{};
+
+    std::vector<Trade> completedTrades{};
 };
 
 #endif /* E525F97B_4F13_4C75_A01F_FD07567571E0 */
