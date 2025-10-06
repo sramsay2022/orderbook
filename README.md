@@ -79,3 +79,9 @@ To remove all generated files:
 ```sh
 rm -rf build/
 ```
+
+
+
+
+Shared pointer is used for Orderbook because both the matching engine and the users need to be able to see it.
+Unique pointer is used for the orders because once theyve been placed, they belong to the OB and cant be changed, only deleted

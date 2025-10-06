@@ -17,13 +17,30 @@
 // Market orders, price is not checked, orders are filled automatically
 void MatchingEngine::match(std::unique_ptr<Order> order)
 {
-    m_ob->addOrder(std::move(order));
-    // if (order->getType() == Type::LIMIT)
+    m_currentOrder = std::move(order);
+
+    if (m_currentOrder->getSide() == Side::BUY)
     {
-        // auto bestPrice = order->getSide() == Side::BUY ? m_ob->peekBestAsk() :
-        // m_ob->peekBestBid();
+        buy();
+    }
+    else
+    {
+        sell();
     }
 }
+
+void MatchingEngine::sell()
+{
+    if (m_currentOrder->getType() == Type::MARKET)
+    {
+        m_ob->peekBestBid();
+    }
+    else
+    {
+    }
+}
+
+void MatchingEngine::buy() {}
 
 // if (order->getSide() == Side::BUY)
 //     {

@@ -3,9 +3,7 @@
 
 #include <cassert>
 #include <memory>
-#include <queue>
 #include <set>
-#include <vector>
 
 #include "Order.h"
 
@@ -34,14 +32,14 @@ class OrderBook
     void removeOrder(long long orderID);
     void fillOrder(std::unique_ptr<Order> o1);
 
-    Order* peekBestBid() const;
-    Order* peekBestAsk() const;
+    auto peekBestBid() const { return m_buyOrders.begin(); }
+    auto peekBestAsk() const { return m_sellOrders.begin(); }
 
     void showOrders();
 
  private:
-    std::shared_ptr<OrderBookMultiSet> m_buyOrders{std::make_shared<OrderBookMultiSet>()};
-    std::shared_ptr<OrderBookMultiSet> m_sellOrders{std::make_shared<OrderBookMultiSet>()};
+    OrderBookMultiSet m_buyOrders{};
+    OrderBookMultiSet m_sellOrders{};
 
     std::map<Order, Order> filledOrders{};
 };

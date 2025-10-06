@@ -39,7 +39,7 @@ class Order
     };
     ~Order() = default;
 
-    void partialFill();
+    void partialFill(const Order& rhs);  // TODO : Takes in an order ref and finds difference
 
     void setQuantity(int);
     int  getQuantity() const { return m_quantity; }

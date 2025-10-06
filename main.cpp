@@ -12,9 +12,10 @@ int main()
     std::shared_ptr<OrderBook> orderBook{std::make_shared<OrderBook>()};
 
     MatchingEngine matcher{orderBook};
+
     OrderGenerator ordGen{};
 
-    auto newOrders = ordGen.getOrders();
+    auto newOrders{ordGen.getOrders()};
 
     cout << "Order book" << endl;
 
