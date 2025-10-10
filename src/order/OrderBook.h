@@ -25,8 +25,8 @@ class OrderBook
  private:
     struct PriceLevel
     {
-        std::deque<Order> buys{};   // Best bid is last element
-        std::deque<Order> sells{};  // Best ask is first element
+        std::deque<Order> buys{};   // Best bid is last element rend()
+        std::deque<Order> sells{};  // Best ask is first element begin()
     };
     // Both buys and sells are sorted using std::less
     std::map<int, PriceLevel> m_priceLevels;
