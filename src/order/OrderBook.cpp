@@ -2,36 +2,39 @@
 
 #include <cassert>
 
-void OrderBook::addOrder(std::unique_ptr<Order> order)
+#include "Order.h"
+
+void OrderBook::addOrder(const Order& order)
 {
-    if (order->getSide() == Side::BUY)
+    if (order.getSide() == Side::BUY)
     {
-        m_buyOrders.insert(std::move(order));
+        m_priceLevels[order.getPrice()].buys.push_back(order);
     }
     else
     {
-        m_sellOrders.insert(std::move(order));
+        m_priceLevels[order.getPrice()].sells.push_back(order);
     };
 }
 
-void OrderBook::removeOrder(long long orderID) { (void)orderID; }
+void OrderBook::removeBuyOrder(std::deque<Order>::iterator itr) {}
 
 void OrderBook::showOrders()
 {
-    assert(!m_buyOrders.empty());
-
-    auto iterBuy = m_buyOrders.begin();
-
-    for (; iterBuy != m_buyOrders.end(); iterBuy++)
+    for (const auto& [price, ordersAtPrice] : m_priceLevels)
     {
-        iterBuy->get()->printDetails();
+        std::cout << "Bid price " << price << '\n';
+        for (const auto& order : ordersAtPrice.buys)
+        {
+            order.printDetails();
+        }
     }
 
-    assert(!m_sellOrders.empty());
-
-    auto iterSell = m_sellOrders.begin();
-    for (; iterSell != m_sellOrders.end(); iterSell++)
+    for (const auto& [price, ordersAtPrice] : m_priceLevels)
     {
-        iterSell->get()->printDetails();
+        std::cout << "Ask price " << price << '\n';
+        for (const auto& order : ordersAtPrice.sells)
+        {
+            order.printDetails();
+        }
     }
 }

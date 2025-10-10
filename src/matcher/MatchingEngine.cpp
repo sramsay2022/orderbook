@@ -1,76 +1,95 @@
-#include "MatchingEngine.h"
+// #include "MatchingEngine.h"
 
-#include <memory>
+// #include <memory>
+// #include <utility>
 
-#include "Order.h"
+// #include "Order.h"
 
-/* Logic:
-    Order in -> Check if Market -> match immedietly with top result
-    Order in -> Check if Limit -> check to see if price of top is more/less -> add to queue if other
-   orders come before
+// /* Logic:
+//     Order in -> Check if Market -> match immedietly with top result
+//     Order in -> Check if Limit -> check to see if price of top is more/less -> add to queue if
+//     other
+//    orders come before
 
-                                                                            -> fill order if only
-   one at that price and matchs top oppposite
+//                                                                             -> fill order if only
+//    one at that price and matchs top oppposite
 
-*/
+// */
 
-// Market orders, price is not checked, orders are filled automatically
-void MatchingEngine::match(std::unique_ptr<Order> order)
-{
-    m_currentOrder = std::move(order);
+// // Market orders, price is not checked, orders are filled automatically
+// void MatchingEngine::match(std::unique_ptr<Order> order)
+// {
+//     m_currentOrder = std::move(order);
 
-    if (m_currentOrder->getSide() == Side::BUY)
-    {
-        buy();
-    }
-    else
-    {
-        sell();
-    }
-}
+//     if (m_currentOrder->getSide() == Side::BUY)
+//     {
+//         if (m_ob->peekBestAsk()->get())
+//         {
+//             buy();
+//         }
+//         else
+//         {
+//             m_ob->addOrder(std::move(m_currentOrder));
+//         }
+//     }
+//     else
+//     {
+//         if (m_ob->peekBestBid()->get())
+//         {
+//             sell();
+//         }
+//         else
+//         {
+//             m_ob->addOrder(std::move(m_currentOrder));
+//         }
+//     }
+// }
 
-void MatchingEngine::sell()
-{
-    auto bestBid = m_ob->peekBestBid()->get();
+// void MatchingEngine::sell()
+// {
+//     auto bestBid = m_ob->peekBestBid()->get();
 
-    const long long orderID  = m_currentOrder->getID();
-    const double    price    = m_currentOrder->getPrice();
-    const int       quantity = m_currentOrder->getQuantity();
+//     long long bidID        = bestBid->getID();
+//     double    bestPrice    = bestBid->getPrice();
+//     int       bestQuantity = bestBid->getQuantity();
 
-    bool currentOrderFilled{false};
+//     const long long orderID  = m_currentOrder->getID();
+//     const double    price    = m_currentOrder->getPrice();
+//     const int       quantity = m_currentOrder->getQuantity();
 
-    while (currentOrderFilled)
-    {  // if (m_currentOrder->getType() == Type::MARKET)
-       //   {
+//     bool currentOrderFilled{false};
 
-        const long long bidID        = bestBid->getID();
-        const double    bestPrice    = bestBid->getPrice();
-        const int       bestQuantity = bestBid->getQuantity();
+//     while (!currentOrderFilled)
+//     {
+//         if (quantity <= bestQuantity)
+//         {
+//             // Add the trade -> set the new quant for first item in list -> reset the order as it
+//             is
+//             // now filled
+//             completedTrades.push_back(Trade(bidID, orderID, bestPrice, quantity));
 
-        completedTrades.push_back(Trade(bidID, orderID, bestPrice, quantity));
+//             bestBid->setQuantity(bestQuantity - quantity);
+//             m_currentOrder.reset();
+//             currentOrderFilled = true;
 
-        if (quantity <= bestQuantity)
-        {
-            bestBid->setQuantity(bestQuantity - quantity);
-            if (bestQuantity - quantity == 0)
-            {
-                m_ob->removeBid(m_ob->peekBestBid());
-            }
-            m_currentOrder.reset();
-            currentOrderFilled = true;
-        }
-        else
-        {
-            completedTrades.push_back(Trade(bidID, orderID, bestPrice, quantity));
-            m_ob->removeBid(m_ob->peekBestBid());
+//             // Remove the top bid if that is also filled
+//             if (quantity == bestQuantity)
+//             {
+//                 m_ob->removeBid(m_ob->peekBestBid());
+//             }
+//         }
+//         else
+//         {
+//             completedTrades.push_back(Trade(bidID, orderID, bestPrice, bestQuantity));
+//             m_ob->removeBid(m_ob->peekBestBid());
 
-            bestBid = m_ob->peekBestBid()->get();
-        }
-        //   }
-        //  else
-        {
-        }
-    }
-}
+//             bestBid = m_ob->peekBestBid()->get();
+//             if (!bestBid)
+//             {
+//                 m_ob->addOrder(std::move(m_currentOrder));
+//             }
+//         }
+//     }
+// }
 
-void MatchingEngine::buy() {}
+// void MatchingEngine::buy() {}

@@ -5,7 +5,6 @@
 
 #include "Order.h"
 #include "OrderBook.h"
-#include "Trade.h"
 
 class MatchingEngine
 {
@@ -13,7 +12,7 @@ class MatchingEngine
     MatchingEngine(const std::shared_ptr<OrderBook>& orderBook)
         : m_ob{orderBook} {};
 
-    void match(std::unique_ptr<Order> order);
+    void match(const Order& order);
     void sell();
     void buy();
     void fillOrder();

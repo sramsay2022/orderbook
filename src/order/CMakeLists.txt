@@ -1,5 +1,4 @@
 set(Sources
-    Order.cpp
     OrderBook.cpp
 )
 

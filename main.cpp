@@ -13,17 +13,15 @@ int main()
 
     MatchingEngine matcher{orderBook};
 
-    OrderGenerator ordGen{};
+    OrderGenerator ordGen{Type::MARKET};
 
     auto newOrders{ordGen.getOrders()};
 
     cout << "Order book" << endl;
 
-    for (const auto o : newOrders)
+    for (const auto ord : newOrders)
     {
-        auto ord = std::make_unique<Order>(*o);
-
-        matcher.match(std::move(ord));
+        orderBook->addOrder(std::move(ord));
     }
 
     cout << endl;

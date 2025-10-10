@@ -2,48 +2,37 @@
 #define DD464386_82F4_4916_9C97_26F8B65EC003
 
 #include <cassert>
-#include <memory>
-#include <set>
 
 #include "Order.h"
-
-// Compare the for the lowest price then compare for earliest time if at same price. FIFO
-struct OrderPtrCmp
-{
-    bool operator()(const std::unique_ptr<Order>& o1, const std::unique_ptr<Order>& o2) const
-    {
-        assert(o1 && o2);
-        if (o1->getPrice() == o2->getPrice())
-        {
-            return o1->getTime() < o2->getTime();
-        }
-        return o1->getPrice() < o2->getPrice();
-    }
-};
-
-using OrderBookSet = std::set<std::unique_ptr<Order>, OrderPtrCmp>;
 
 class OrderBook
 {
  public:
     OrderBook() = default;
 
-    void addOrder(std::unique_ptr<Order> order);
-    void removeOrder(long long orderID);
+    void addOrder(const Order& order);
+    void removeBuyOrder(std::deque<Order>::iterator itr);
+    void removeSellOrder(std::deque<Order>::iterator itr);
 
-    auto peekBestBid() const { return m_buyOrders.begin(); }
-    auto peekBestAsk() const { return m_sellOrders.begin(); }
+    // auto peekBestBid() const { return m_buyOrders.begin(); }
+    // auto peekBestAsk() const { return m_sellOrders.begin(); }
 
-    void removeBid(OrderBookSet::iterator it) { m_buyOrders.erase(it); }
-    void removeAsk(OrderBookSet::iterator it) { m_sellOrders.erase(it); }
+    // void removeBid(OrderBookSet::iterator it) { m_buyOrders.erase(it); }
+    // void removeAsk(OrderBookSet::iterator it) { m_sellOrders.erase(it); }
 
     void showOrders();
 
  private:
-    OrderBookSet m_buyOrders{};
-    OrderBookSet m_sellOrders{};
+    struct PriceLevel
+    {
+        std::deque<Order> buys{};   // Best bid is last element
+        std::deque<Order> sells{};  // Best ask is first element
+    };
+    // Both buys and sells are sorted using std::less
+    std::map<int, PriceLevel> m_priceLevels;
 
-    std::map<Order, Order> filledOrders{};  // TODO
+    //<ID, <price, iterator>> maps an iterator to the order that contains the orderID
+    std::unordered_map<long long, std::pair<double, std::deque<Order>::iterator>> ledger;
 };
 
 #endif /* DD464386_82F4_4916_9C97_26F8B65EC003 */

@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic)
 # add_compile_options(-Werror)
-
+add_compile_options(-g -O0 -fno-omit-frame-pointer -fstandalone-debug) 
 
 # Set the output directories for the all binarys
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -22,7 +22,6 @@ add_subdirectory(src/matcher)
 
 
 target_link_libraries(${PROJECT_NAME}
-    order
     util
     matcher
 )
