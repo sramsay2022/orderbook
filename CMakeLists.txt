@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10.0)
 project(orderBook VERSION 0.1.0 LANGUAGES C CXX)
 
 # Set C++ standard
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Needed for clangd
@@ -19,7 +19,6 @@ add_executable(${PROJECT_NAME} main.cpp)
 add_subdirectory(src/order)
 add_subdirectory(src/util)
 add_subdirectory(src/matcher)
-
 
 target_link_libraries(${PROJECT_NAME}
     util

@@ -7,6 +7,9 @@
 #include <map>
 #include <string>
 
+// enum class avoids implicit conversion to int (reduce bugs)
+// : uint8_t sets the type to 8bits instead of 4bytes which default
+
 enum class Side : uint8_t
 {
     BUY,
@@ -51,7 +54,7 @@ class Order
 
     void printDetails() const
     {
-        cout << "m_ID: " << m_ID << ", Quantity: " << m_quantity << "@ " << m_price
+        cout << "m_ID: " << m_ID << ", Quantity: " << m_quantity << " @ " << m_price
              << ", Type: " << sideMap.at(m_side) << endl;
     }
 

@@ -16,7 +16,7 @@ void OrderBook::addOrder(const Order& order)
     };
 }
 
-void OrderBook::removeBuyOrder(std::deque<Order>::iterator itr) {}
+void OrderBook::removeBuyOrder(std::deque<Order>::iterator itr) { itr++; }
 
 void OrderBook::showOrders()
 {

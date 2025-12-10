@@ -15,7 +15,7 @@ struct OrderGenerator
         }
     }
 
-    std::vector<Order> getOrders() const { return orderList; }
+    std::vector<Order> getOrders() && { return std::move(orderList); }
 
     std::vector<Order> orderList{};
 };

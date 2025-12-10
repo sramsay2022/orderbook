@@ -15,7 +15,7 @@ int main()
 
     OrderGenerator ordGen{Type::MARKET};
 
-    auto newOrders{ordGen.getOrders()};
+    auto newOrders = std::move(ordGen).getOrders();
 
     cout << "Order book" << endl;
 

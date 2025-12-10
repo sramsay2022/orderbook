@@ -2,6 +2,7 @@
 #define E525F97B_4F13_4C75_A01F_FD07567571E0
 
 #include <memory>
+#include <vector>
 
 #include "Order.h"
 #include "OrderBook.h"
