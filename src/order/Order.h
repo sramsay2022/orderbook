@@ -7,8 +7,13 @@
 #include <map>
 #include <string>
 
-// enum class avoids implicit conversion to int (reduce bugs)
-// : uint8_t sets the type to 8bits instead of 4bytes which default
+/*
+    Notes:
+    - enum class avoids implicit conversion to int (reduce bugs)
+    - uint8_t sets the type to 8bits instead of 4bytes which default
+
+    @TODO Use random number generator rather than sequential for ID
+*/
 
 enum class Side : uint8_t
 {
@@ -61,7 +66,7 @@ class Order
  private:
     long long  m_ID{};
     int        m_quantity{};
-    const int  m_price{};
+    const int  m_price{};  // Price in cents
     const Side m_side{};
     const Type m_type{};
 
@@ -70,7 +75,7 @@ class Order
 
 struct Trade
 {
-    Trade(long long buyId, long long sellId, double p, int q)
+    Trade(long long buyId, long long sellId, int p, int q)
         : m_buyOrderId(buyId)
         , m_sellOrderId(sellId)
         , m_price(p)
@@ -84,10 +89,10 @@ struct Trade
 
     const long long m_buyOrderId{};
     const long long m_sellOrderId{};
-    const double    m_price{};
+    const int       m_price{};
     const int       m_quantity{};
 
-    Time::time_point timestamp{Time::now()};
+    const Time::time_point timestamp{Time::now()};
 };
 
 #endif /* FF82AEC3_EE59_4C0D_A698_822F76DEC3D9 */

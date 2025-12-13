@@ -13,18 +13,26 @@ int main()
 
     MatchingEngine matcher{orderBook};
 
-    OrderGenerator ordGen{Type::MARKET};
-
-    auto newOrders = std::move(ordGen).getOrders();
-
-    cout << "Order book" << endl;
+    // Fill the order book with limit orders
+    auto newOrders = OrderGenerator::genOrders(Type::LIMIT);
 
     for (const auto ord : newOrders)
     {
-        orderBook->addOrder(std::move(ord));
+        orderBook->addOrder(ord);
     }
+    //---------------------------------------
+
+    // newOrders = OrderGenerator::genOrders(Type::MARKET, 200);
+    // for (const auto ord : newOrders)
+    // {
+    //     matcher.match(ord);
+    // }
 
     cout << endl;
+
+    orderBook->showOrders();
+    orderBook->removeOrder(1);
+    orderBook->removeOrder(3);
 
     orderBook->showOrders();
 
