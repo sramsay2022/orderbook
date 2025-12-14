@@ -13,31 +13,31 @@ class OrderBook
  public:
     OrderBook() = default;
 
-    void addOrder(const Order& order);
-    void removeOrder(long long id);
-
-    // auto peekBestBid() const { return m_buyOrders.begin(); }
-    // auto peekBestAsk() const { return m_sellOrders.begin(); }
-
     void showOrders();
 
- private:
-    std::list<Order>& getBucket(int price, Side side);
+    void addOrder(const Order& order);
+    void removeOrder(const long long id);
+
+    auto& getBook(const Side side) { return (side == Side::BUY) ? m_bid : m_ask; }
+
+    // BestBid: Lowest price someone will buy for - smallest value in map rbegin()
+    // BestAsk: Highest price someone will sell for - largest value in map begin()
+    int peekBestBid() const { return m_bid.rbegin()->first; }
+    int peekBestAsk() const { return m_ask.begin()->first; }
+
+    auto getBestBid() { return m_bid.rbegin(); }
+    auto getBestAsk() { return m_bid.begin(); }
 
  private:
-    struct PriceLevel
-    {
-        std::list<Order> buys{};   // Best bid is last element rend()
-        std::list<Order> sells{};  // Best ask is first element begin()
-    };
-    std::map<int, PriceLevel> m_priceLevels;
+    std::map<int, std::list<Order>> m_bid;
+    std::map<int, std::list<Order>> m_ask;
 
     struct OrderLocator
     {
-        const int  price;
-        const Side side;
+        int  price;
+        Side side;
 
-        const std::list<Order>::iterator iter;
+        std::list<Order>::iterator iter;
     };
     std::unordered_map<long long, OrderLocator> ledger;
 };

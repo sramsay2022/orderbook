@@ -14,17 +14,17 @@ class MatchingEngine
         : m_ob{orderBook} {};
 
     void match(const Order& order);
-    void sell();
-    void buy();
+    void sell(const Order& order);
+    void buy(const Order& order);
     void fillOrder();
+    void createTrade(const Order& o1, const Order& o2, const int price, const int quantity);
 
  private:
     std::shared_ptr<OrderBook> m_ob{};
-    std::unique_ptr<Order>     m_currentOrder{};
 
-    double currentPrice{};
+    double m_currentPrice{};
 
-    std::vector<Trade> completedTrades{};
+    std::vector<Trade> m_completedTrades{};
 };
 
 #endif /* E525F97B_4F13_4C75_A01F_FD07567571E0 */

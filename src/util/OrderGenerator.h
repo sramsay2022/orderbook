@@ -19,18 +19,47 @@
 
 struct OrderGenerator
 {
-    static std::vector<Order> genOrders(Type marketType, int quant = 100)
+    static std::vector<Order> genOrders(OrderType marketType, int quant = 10000)
     {
-        std::vector<Order> orderList{};
-        orderList.reserve(quant);
+        std::vector<Order> orders{};
+        orders.reserve(quant);
 
-        for (int i = 0; i < quant / 2; i++)
+        for (int i = 0; i < quant; i++)
         {
-            orderList.emplace_back((i % 23) * 100, (i % 13) * 2, Side::SELL, marketType);
-            orderList.emplace_back((i % 50) * 100, i % 13, Side::BUY, marketType);
+            orders.emplace_back((i % 50) * 100, i % 13, Side::BUY, marketType);
+            orders.emplace_back((i % 23) * 100, (i % 13) * 50000, Side::SELL, marketType);
         }
 
-        return orderList;
+        return orders;
+    }
+
+    static std::vector<Order> generateSampleOrders()
+    {
+        std::vector<Order> orders;
+        orders.reserve(20);
+
+        int bestBid = 99;
+        int bestAsk = 100;
+
+        // --- Generate 10 BUY limit orders ---
+        for (int i = 0; i < 10; ++i)
+        {
+            int price = bestBid - i;     // 99, 98, 97, ...
+            int qty   = 100 + (i * 10);  // 100, 110, 120, ...
+
+            orders.emplace_back(qty, price, Side::BUY, OrderType::LIMIT);
+        }
+
+        // --- Generate 10 SELL limit orders ---
+        for (int i = 0; i < 10; ++i)
+        {
+            int price = bestAsk + i;  // 100, 101, 102, ...
+            int qty   = 100 + (i * 10);
+
+            orders.emplace_back(qty, price, Side::SELL, OrderType::LIMIT);
+        }
+
+        return orders;
     }
 };
 

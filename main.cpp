@@ -14,7 +14,7 @@ int main()
     MatchingEngine matcher{orderBook};
 
     // Fill the order book with limit orders
-    auto newOrders = OrderGenerator::genOrders(Type::LIMIT);
+    auto newOrders = OrderGenerator::generateSampleOrders();
 
     for (const auto ord : newOrders)
     {

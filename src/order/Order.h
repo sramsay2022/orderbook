@@ -5,12 +5,13 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
-#include <string>
+#include <string_view>
 
 /*
     Notes:
     - enum class avoids implicit conversion to int (reduce bugs)
     - uint8_t sets the type to 8bits instead of 4bytes which default
+    - Use string_view as it is read only and no need to alocate
 
     @TODO Use random number generator rather than sequential for ID
 */
@@ -21,14 +22,15 @@ enum class Side : uint8_t
     SELL
 };
 
-enum class Type : uint8_t
+enum class OrderType : uint8_t
 {
     MARKET,
     LIMIT
 };
 
-const std::map<Side, std::string> sideMap = {{Side::BUY, "BUY"}, {Side::SELL, "SELL"}};
-const std::map<Type, std::string> typeMap = {{Type::MARKET, "MARKET"}, {Type::LIMIT, "LIMIT"}};
+const std::map<Side, std::string_view>      sideMap = {{Side::BUY, "BUY"}, {Side::SELL, "SELL"}};
+const std::map<OrderType, std::string_view> typeMap = {{OrderType::MARKET, "MARKET"},
+                                                       {OrderType::LIMIT, "LIMIT"}};
 
 using std::cout, std::endl;
 using Time = std::chrono::system_clock;
@@ -37,7 +39,7 @@ class Order
 {
  public:
     Order() = delete;
-    Order(int quantity, int price, Side side, Type type)
+    Order(int quantity, int price, Side side, OrderType type)
         : m_quantity{quantity}
         , m_price{price}
         , m_side{side}
@@ -55,20 +57,20 @@ class Order
     int              getPrice() const { return m_price; }
     Time::time_point getTime() const { return m_timestamp; }
     Side             getSide() const { return m_side; }
-    Type             getType() const { return m_type; }
+    OrderType        getType() const { return m_type; }
 
     void printDetails() const
     {
         cout << "m_ID: " << m_ID << ", Quantity: " << m_quantity << " @ " << m_price
-             << ", Type: " << sideMap.at(m_side) << endl;
+             << ", Side: " << sideMap.at(m_side) << endl;
     }
 
  private:
-    long long  m_ID{};
-    int        m_quantity{};
-    const int  m_price{};  // Price in cents
-    const Side m_side{};
-    const Type m_type{};
+    long long       m_ID{};
+    int             m_quantity{};
+    const int       m_price{};  // Price in cents
+    const Side      m_side{};
+    const OrderType m_type{};
 
     const Time::time_point m_timestamp{Time::now()};
 };
