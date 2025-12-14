@@ -23,8 +23,11 @@ int main()
     //---------------------------------------
     matcher.listTrades();
 
-    Order o{590, 90, Side::SELL, OrderType::MARKET};
+    Order o{10000, 90, Side::SELL, OrderType::MARKET};
     matcher.match(o);
+
+    Order o2{10, 90, Side::BUY, OrderType::MARKET};
+    matcher.match(o2);
 
     matcher.listTrades();
     cout << endl;

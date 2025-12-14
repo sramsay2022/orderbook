@@ -22,7 +22,7 @@ class OrderBook
 
     // BestBid: Lowest price someone will buy for - smallest value in map rbegin()
     // BestAsk: Highest price someone will sell for - largest value in map begin()
-    int peekBestBid() const { return m_bid.rbegin()->first; }
+    int peekBestBid() const { return std::prev(m_bid.end())->first; }
     int peekBestAsk() const { return m_ask.begin()->first; }
 
     bool isBidEmpty() const { return m_bid.empty(); }
@@ -30,6 +30,17 @@ class OrderBook
 
     auto getBestBid() { return std::prev(m_bid.end()); }
     auto getBestAsk() { return m_ask.begin(); }
+
+    // This is for an order of one side to return the other side for matching
+    auto getOppositeBestPrice(Side side)
+    {
+        return (side == Side::BUY) ? m_ask.begin() : std::prev(m_bid.end());
+    }
+
+    bool isOppositeEmpty(Side side) const
+    {
+        return (side == Side::BUY) ? m_ask.empty() : m_bid.empty();
+    }
 
  private:
     std::map<int, std::list<Order>> m_bid;

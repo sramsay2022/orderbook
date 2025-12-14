@@ -1,8 +1,6 @@
 #ifndef E525F97B_4F13_4C75_A01F_FD07567571E0
 #define E525F97B_4F13_4C75_A01F_FD07567571E0
 
-#include <__tree>
-#include <list>
 #include <memory>
 #include <vector>
 
@@ -16,8 +14,8 @@ class MatchingEngine
         : m_ob{orderBook} {};
 
     void match(Order& order);
-    void sell(Order& order);
-    void buy(Order& order);
+    void matchMarket(Order& order);
+    void matchLimit(Order& order);
     void fillOrder();
     void createTrade(const Order& o1, const Order& o2, const int price, const int quantity);
 

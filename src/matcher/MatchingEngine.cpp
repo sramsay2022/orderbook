@@ -17,27 +17,23 @@
 // Market orders, price is not checked, orders are filled automatically
 void MatchingEngine::match(Order& order)
 {
-    if (order.getSide() == Side::BUY)
+    if (order.getType() == OrderType::MARKET)
     {
-        buy(order);
-    }
-    else
-    {
-        sell(order);
+        matchMarket(order);
     }
 }
 
-void MatchingEngine::sell(Order& incoming)
+void MatchingEngine::matchMarket(Order& incoming)
 {
     while (incoming.getQuantity() > 0)
     {
-        if (m_ob->isBidEmpty())
+        if (m_ob->isOppositeEmpty(incoming.getSide()))
         {
             m_ob->addOrder(incoming);
             return;
         }
-
-        auto   bestPriceIter = m_ob->getBestBid();
+        // getBestPrice returns opposite book
+        auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
         Order& resting       = bestPriceIter->second.front();
 
         const int price        = bestPriceIter->first;
@@ -57,8 +53,6 @@ void MatchingEngine::sell(Order& incoming)
         }
     }
 }
-
-void MatchingEngine::buy(Order& order) {}
 
 void MatchingEngine::resetToCurrentBucket() {}
 

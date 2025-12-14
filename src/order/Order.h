@@ -98,7 +98,7 @@ struct Trade
     void printDetails() const
     {
         cout << "m_tradeId: " << m_tradeId << ", Quantity: " << m_quantity << " @ " << m_price
-             << "m_sellOrderId: " << m_sellOrderId << "m_buyOrderId: " << m_buyOrderId << endl;
+             << " SellOrderId: " << m_sellOrderId << " BuyOrderId: " << m_buyOrderId << endl;
     }
 
     long long m_tradeId{};
