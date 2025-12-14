@@ -15,7 +15,7 @@
 */
 
 // Market orders, price is not checked, orders are filled automatically
-void MatchingEngine::match(const Order& order)
+void MatchingEngine::match(Order& order)
 {
     if (order.getSide() == Side::BUY)
     {
@@ -27,33 +27,37 @@ void MatchingEngine::match(const Order& order)
     }
 }
 
-void MatchingEngine::sell(const Order& incomingOrder)
+void MatchingEngine::sell(Order& incomingOrder)
 {
     int incomingQty = incomingOrder.getQuantity();
 
+    auto  bestBidIter  = m_ob->getBestBid();
+    int   bestPrice    = bestBidIter->first;
+    auto& restingOrder = bestBidIter->second.front();
+
+    int restingOrderQty = restingOrder.getQuantity();
+
     while (incomingQty > 0)
     {
-        auto bestBidIt = m_ob->getBestBid();
-
-        int   bestPrice   = bestBidIt->first;
-        auto& bestBidList = bestBidIt->second;
-
-        auto& restingOrder    = bestBidList.front();
-        int   limitOrderQuant = restingOrder.getQuantity();
-
-        if (limitOrderQuant > incomingQty)
+        if (restingOrderQty > incomingQty)
         {
             createTrade(incomingOrder, restingOrder, bestPrice, incomingQty);
-            restingOrder.setQuantity(limitOrderQuant - incomingQty);
+            restingOrder.setQuantity(restingOrderQty - incomingQty);
             incomingQty = 0;
         }
-        else if (incomingQty > limitOrderQuant)
+        else if (incomingQty > restingOrderQty)
         {
+            createTrade(incomingOrder, restingOrder, bestPrice, restingOrderQty);
+            incomingOrder.setQuantity(incomingQty - restingOrderQty);
+
+            if (m_ob->peekBestBid() != bestPrice)
+            {
+            }
         }
     }
 }
 
-void MatchingEngine::buy(const Order& order) {}
+void MatchingEngine::buy(Order& order) {}
 
 void MatchingEngine::createTrade(const Order& o1, const Order& o2, const int price,
                                  const int quantity)

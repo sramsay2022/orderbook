@@ -13,9 +13,9 @@ class MatchingEngine
     MatchingEngine(const std::shared_ptr<OrderBook>& orderBook)
         : m_ob{orderBook} {};
 
-    void match(const Order& order);
-    void sell(const Order& order);
-    void buy(const Order& order);
+    void match(Order& order);
+    void sell(Order& order);
+    void buy(Order& order);
     void fillOrder();
     void createTrade(const Order& o1, const Order& o2, const int price, const int quantity);
 
