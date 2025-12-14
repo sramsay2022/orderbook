@@ -21,20 +21,13 @@ int main()
         orderBook->addOrder(ord);
     }
     //---------------------------------------
+    matcher.listTrades();
 
-    // newOrders = OrderGenerator::genOrders(Type::MARKET, 200);
-    // for (const auto ord : newOrders)
-    // {
-    //     matcher.match(ord);
-    // }
+    Order o{590, 90, Side::SELL, OrderType::MARKET};
+    matcher.match(o);
 
+    matcher.listTrades();
     cout << endl;
-
-    orderBook->showOrders();
-    orderBook->removeOrder(1);
-    orderBook->removeOrder(3);
-
-    orderBook->showOrders();
 
     return 0;
 }

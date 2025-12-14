@@ -27,40 +27,51 @@ void MatchingEngine::match(Order& order)
     }
 }
 
-void MatchingEngine::sell(Order& incomingOrder)
+void MatchingEngine::sell(Order& incoming)
 {
-    int incomingQty = incomingOrder.getQuantity();
-
-    auto  bestBidIter  = m_ob->getBestBid();
-    int   bestPrice    = bestBidIter->first;
-    auto& restingOrder = bestBidIter->second.front();
-
-    int restingOrderQty = restingOrder.getQuantity();
-
-    while (incomingQty > 0)
+    while (incoming.getQuantity() > 0)
     {
-        if (restingOrderQty > incomingQty)
+        if (m_ob->isBidEmpty())
         {
-            createTrade(incomingOrder, restingOrder, bestPrice, incomingQty);
-            restingOrder.setQuantity(restingOrderQty - incomingQty);
-            incomingQty = 0;
+            m_ob->addOrder(incoming);
+            return;
         }
-        else if (incomingQty > restingOrderQty)
-        {
-            createTrade(incomingOrder, restingOrder, bestPrice, restingOrderQty);
-            incomingOrder.setQuantity(incomingQty - restingOrderQty);
 
-            if (m_ob->peekBestBid() != bestPrice)
-            {
-            }
+        auto   bestPriceIter = m_ob->getBestBid();
+        Order& resting       = bestPriceIter->second.front();
+
+        const int price        = bestPriceIter->first;
+        const int incomingQty  = incoming.getQuantity();
+        const int restingQty   = resting.getQuantity();
+        const int takeQuantity = std::min(incomingQty, restingQty);
+
+        createTrade(incoming, resting, price, takeQuantity);
+
+        resting.reduceQuantity(takeQuantity);
+        incoming.reduceQuantity(takeQuantity);
+
+        if (resting.isFilled())
+        {
+            m_ob->removeOrder(resting.getID());
+            setCurrentPrice(price);
         }
     }
 }
 
 void MatchingEngine::buy(Order& order) {}
 
+void MatchingEngine::resetToCurrentBucket() {}
+
 void MatchingEngine::createTrade(const Order& o1, const Order& o2, const int price,
                                  const int quantity)
 {
     m_completedTrades.emplace_back(Trade{o1.getID(), o2.getID(), price, quantity});
+}
+
+void MatchingEngine::listTrades()
+{
+    for (auto& t : m_completedTrades)
+    {
+        t.printDetails();
+    }
 }

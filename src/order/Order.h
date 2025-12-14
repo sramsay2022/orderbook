@@ -50,14 +50,22 @@ class Order
     };
     ~Order() = default;
 
-    void setQuantity(int x) { m_quantity = x; };
     int  getQuantity() const { return m_quantity; }
+    void setQuantity(int x) { m_quantity = x; }
+
+    void reduceQuantity(int amount)
+    {
+        m_quantity -= amount;
+        if (m_quantity < 0) m_quantity = 0;
+    }
 
     long long        getID() const { return m_ID; }
     int              getPrice() const { return m_price; }
     Time::time_point getTime() const { return m_timestamp; }
     Side             getSide() const { return m_side; }
     OrderType        getType() const { return m_type; }
+
+    bool isFilled() const { return m_quantity == 0; }
 
     void printDetails() const
     {
@@ -85,6 +93,12 @@ struct Trade
     {
         static long long genTradeID{0};
         m_tradeId = ++genTradeID;
+    }
+
+    void printDetails() const
+    {
+        cout << "m_tradeId: " << m_tradeId << ", Quantity: " << m_quantity << " @ " << m_price
+             << "m_sellOrderId: " << m_sellOrderId << "m_buyOrderId: " << m_buyOrderId << endl;
     }
 
     long long m_tradeId{};

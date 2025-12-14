@@ -25,8 +25,11 @@ class OrderBook
     int peekBestBid() const { return m_bid.rbegin()->first; }
     int peekBestAsk() const { return m_ask.begin()->first; }
 
-    auto getBestBid() { return m_bid.rbegin(); }
-    auto getBestAsk() { return m_bid.begin(); }
+    bool isBidEmpty() const { return m_bid.empty(); }
+    bool isAskEmpty() const { return m_ask.empty(); }
+
+    auto getBestBid() { return std::prev(m_bid.end()); }
+    auto getBestAsk() { return m_ask.begin(); }
 
  private:
     std::map<int, std::list<Order>> m_bid;
