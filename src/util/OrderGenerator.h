@@ -38,14 +38,14 @@ struct OrderGenerator
         std::vector<Order> orders;
         orders.reserve(20);
 
-        int bestBid = 99;
-        int bestAsk = 100;
+        Price bestBid = 99;
+        Price bestAsk = 100;
 
         // --- Generate 10 BUY limit orders ---
         for (int i = 0; i < 10; ++i)
         {
-            int price = bestBid - i;     // 99, 98, 97, ...
-            int qty   = 100 + (i * 10);  // 100, 110, 120, ...
+            Price    price = bestBid - i;     // 99, 98, 97, ...
+            Quantity qty   = 100 + (i * 10);  // 100, 110, 120, ...
 
             orders.emplace_back(qty, price, Side::BUY, OrderType::LIMIT);
         }
@@ -53,8 +53,8 @@ struct OrderGenerator
         // --- Generate 10 SELL limit orders ---
         for (int i = 0; i < 10; ++i)
         {
-            int price = bestAsk + i;  // 100, 101, 102, ...
-            int qty   = 100 + (i * 10);
+            Price    price = bestAsk + i;  // 100, 101, 102, ...
+            Quantity qty   = 100 + (i * 10);
 
             orders.emplace_back(qty, price, Side::SELL, OrderType::LIMIT);
         }

@@ -6,9 +6,14 @@
 #include "Order.h"
 
 /* Logic:
-    Order in -> Check if Market -> match immedietly with top result
-    Order in -> Check if Limit -> check to see if price of top is more/less -> add to queue if
-    other orders come before
+    Market order in:
+    -> match immedietly with top result
+    ->repeat until order filled
+    -> if bucket empty add to orderbook (Needs priority over limit orders)
+
+    Limit Order in:
+    -> check to see if price of top is more/less
+    -> add to queue if other orders come before
 
     -> fill order if only one at that price and matchs top oppposite
 
@@ -36,15 +41,15 @@ void MatchingEngine::matchMarket(Order& incoming)
         auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
         Order& resting       = bestPriceIter->second.front();
 
-        const int price        = bestPriceIter->first;
-        const int incomingQty  = incoming.getQuantity();
-        const int restingQty   = resting.getQuantity();
-        const int takeQuantity = std::min(incomingQty, restingQty);
+        const Price    price       = bestPriceIter->first;
+        const Quantity incomingQty = incoming.getQuantity();
+        const Quantity restingQty  = resting.getQuantity();
+        const Quantity takeQty     = std::min(incomingQty, restingQty);
 
-        createTrade(incoming, resting, price, takeQuantity);
+        createTrade(incoming, resting, price, takeQty);
 
-        resting.reduceQuantity(takeQuantity);
-        incoming.reduceQuantity(takeQuantity);
+        resting.reduceQuantity(takeQty);
+        incoming.reduceQuantity(takeQty);
 
         if (resting.isFilled())
         {
@@ -56,8 +61,8 @@ void MatchingEngine::matchMarket(Order& incoming)
 
 void MatchingEngine::resetToCurrentBucket() {}
 
-void MatchingEngine::createTrade(const Order& o1, const Order& o2, const int price,
-                                 const int quantity)
+void MatchingEngine::createTrade(const Order& o1, const Order& o2, const Price price,
+                                 const Quantity quantity)
 {
     m_completedTrades.emplace_back(Trade{o1.getID(), o2.getID(), price, quantity});
 }

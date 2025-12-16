@@ -71,6 +71,8 @@ class Order
     OrderType        getType() const { return m_type; }
 
     bool isFilled() const { return m_quantity == 0; }
+    bool isLimit() const { return OrderType::LIMIT == m_type; }
+    bool isMarket() const { return OrderType::MARKET == m_type; }
 
     void printDetails() const
     {

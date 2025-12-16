@@ -17,9 +17,9 @@ class MatchingEngine
     void matchMarket(Order& order);
     void matchLimit(Order& order);
     void fillOrder();
-    void createTrade(const Order& o1, const Order& o2, const int price, const int quantity);
+    void createTrade(const Order& o1, const Order& o2, const Price price, const Quantity quantity);
 
-    void setCurrentPrice(const int price) { m_currentPrice = price; }
+    void setCurrentPrice(const Price price) { m_currentPrice = price; }
 
     void resetToCurrentBucket();
 
@@ -29,7 +29,7 @@ class MatchingEngine
     std::shared_ptr<OrderBook> m_ob{};
     std::vector<Trade>         m_completedTrades{};
 
-    int m_currentPrice{};
+    Price m_currentPrice{};
 };
 
 #endif /* E525F97B_4F13_4C75_A01F_FD07567571E0 */
