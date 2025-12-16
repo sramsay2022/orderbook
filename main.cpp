@@ -25,11 +25,11 @@ int main()
 
     Timer t;
     Order o{10000, 90, Side::SELL, OrderType::MARKET};
-    matcher.matcher(o);
+    matcher.match(o);
     cout << "Time elapsed: " << t.elapsed_ns() << endl;
     t.reset();
     Order o2{10, 90, Side::BUY, OrderType::MARKET};
-    matcher.matcher(o2);
+    matcher.match(o2);
     cout << "Time elapsed: " << t.elapsed_ns() << endl;
     matcher.listTrades();
     cout << endl;

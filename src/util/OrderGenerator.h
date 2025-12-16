@@ -5,18 +5,6 @@
 
 #include "Order.h"
 
-/*
-    Notes:
-    - Made OrderGenerator stateless which means I dont have to create a throwaway object
-    - Added reserve() as the size of the vector is known before hand and can be used to eliminate
-      reallocations if the size is known beforehand.
-
-    By making the struct stateless and the function static I can call it from anywhere and as vector
-    supports moves and NRVO it reduces overhead by:
-    - Moves object to new owner (cheap)
-    - Doesnt have to clean up vector after return as its been moved elsewhere (cheap)
-*/
-
 struct OrderGenerator
 {
     static std::vector<Order> genOrders(OrderType marketType, int quant = 10000)

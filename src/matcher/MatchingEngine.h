@@ -17,12 +17,10 @@ class MatchingEngine
     void matchMarket(Order& order);
     void matchLimit(Order& order);
     void fillOrder();
-    void createTrade(const Order& o1, const Order& o2, const Price price, const Quantity quantity);
 
     void setCurrentPrice(const Price price) { m_currentPrice = price; }
 
-    void resetToCurrentBucket();
-
+    void createTrade(const Order& o1, const Order& o2, const Price price, const Quantity quantity);
     void listTrades();
 
  private:

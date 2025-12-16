@@ -59,8 +59,6 @@ void MatchingEngine::matchMarket(Order& incoming)
     }
 }
 
-void MatchingEngine::resetToCurrentBucket() {}
-
 void MatchingEngine::createTrade(const Order& o1, const Order& o2, const Price price,
                                  const Quantity quantity)
 {
