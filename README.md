@@ -8,3 +8,7 @@ This project is used to model a financial order book. It takes in orders and tri
 
 
 I have added notes for me during this process to help understand my decisions and my thinking at the time.
+
+
+
+For the data structure that stores the Orders I dececided to use std::unordered_map as it has constant time complexity when searching for particular price buckets. Within that I used a std::list of Orders so that I could store an iterator to that order which allows O(1) for finding particular orders. Understandably list is not the most efficient container to use but as a first attempt, and with the idea of just getting it working, it will do for now.

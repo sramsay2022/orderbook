@@ -24,6 +24,11 @@ class Timer
         return std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - m_beg).count();
     }
 
+    long long elapsed_ns() const
+    {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - m_beg).count();
+    }
+
     std::string elapsed_ssms() const
     {
         auto dur = Clock::now() - m_beg;

@@ -1,7 +1,6 @@
 #ifndef DD464386_82F4_4916_9C97_26F8B65EC003
 #define DD464386_82F4_4916_9C97_26F8B65EC003
 
-#include <cassert>
 #include <list>
 #include <map>
 #include <unordered_map>
@@ -43,13 +42,13 @@ class OrderBook
     }
 
  private:
-    std::map<int, std::list<Order>> m_bid;
-    std::map<int, std::list<Order>> m_ask;
+    std::map<Price, std::list<Order>> m_bid;
+    std::map<Price, std::list<Order>> m_ask;
 
     struct OrderLocator
     {
-        int  price;
-        Side side;
+        Price price;
+        Side  side;
 
         std::list<Order>::iterator iter;
     };

@@ -6,8 +6,8 @@
 
 void OrderBook::addOrder(const Order& order)
 {
-    const int  price = order.getPrice();
-    const Side side  = order.getSide();
+    const Price price = order.getPrice();
+    const Side  side  = order.getSide();
 
     auto& book   = getBook(side);
     auto& bucket = book[price];

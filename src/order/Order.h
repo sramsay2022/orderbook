@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string_view>
 
 /*
@@ -35,11 +36,13 @@ const std::map<OrderType, std::string_view> typeMap = {{OrderType::MARKET, "MARK
 using std::cout, std::endl;
 using Time = std::chrono::system_clock;
 
+using Price    = uint32_t;
+using Quantity = uint32_t;
 class Order
 {
  public:
     Order() = delete;
-    Order(int quantity, int price, Side side, OrderType type)
+    Order(Quantity quantity, Price price, Side side, OrderType type)
         : m_quantity{quantity}
         , m_price{price}
         , m_side{side}
@@ -50,17 +53,19 @@ class Order
     };
     ~Order() = default;
 
-    int  getQuantity() const { return m_quantity; }
-    void setQuantity(int x) { m_quantity = x; }
+    Quantity getQuantity() const { return m_quantity; }
+    void     setQuantity(Quantity x) { m_quantity = x; }
 
-    void reduceQuantity(int amount)
+    void reduceQuantity(Quantity takeQty)
     {
-        m_quantity -= amount;
-        if (m_quantity < 0) m_quantity = 0;
+        if (takeQty > m_quantity)
+            throw std::logic_error(
+                std::format("Error: cant have takeQty bigger than quantity{}", getQuantity()));
+        m_quantity -= takeQty;
     }
 
     long long        getID() const { return m_ID; }
-    int              getPrice() const { return m_price; }
+    Price            getPrice() const { return m_price; }
     Time::time_point getTime() const { return m_timestamp; }
     Side             getSide() const { return m_side; }
     OrderType        getType() const { return m_type; }
@@ -75,8 +80,8 @@ class Order
 
  private:
     long long       m_ID{};
-    int             m_quantity{};
-    const int       m_price{};  // Price in cents
+    Quantity        m_quantity{};
+    const Price     m_price{};  // Price in cents
     const Side      m_side{};
     const OrderType m_type{};
 
@@ -85,7 +90,7 @@ class Order
 
 struct Trade
 {
-    Trade(long long buyId, long long sellId, int p, int q)
+    Trade(long long buyId, long long sellId, Price p, Quantity q)
         : m_buyOrderId(buyId)
         , m_sellOrderId(sellId)
         , m_price(p)
@@ -105,8 +110,8 @@ struct Trade
 
     const long long m_buyOrderId{};
     const long long m_sellOrderId{};
-    const int       m_price{};
-    const int       m_quantity{};
+    const Price     m_price{};
+    const Quantity  m_quantity{};
 
     const Time::time_point timestamp{Time::now()};
 };

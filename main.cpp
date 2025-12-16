@@ -4,6 +4,7 @@
 #include "Order.h"
 #include "OrderBook.h"
 #include "OrderGenerator.h"
+#include "Timer.h"
 
 using std::cout, std::endl;
 
@@ -21,14 +22,15 @@ int main()
         orderBook->addOrder(ord);
     }
     //---------------------------------------
-    matcher.listTrades();
 
+    Timer t;
     Order o{10000, 90, Side::SELL, OrderType::MARKET};
-    matcher.match(o);
-
+    matcher.matcher(o);
+    cout << "Time elapsed: " << t.elapsed_ns() << endl;
+    t.reset();
     Order o2{10, 90, Side::BUY, OrderType::MARKET};
-    matcher.match(o2);
-
+    matcher.matcher(o2);
+    cout << "Time elapsed: " << t.elapsed_ns() << endl;
     matcher.listTrades();
     cout << endl;
 
