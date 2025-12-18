@@ -19,13 +19,9 @@
 
 */
 
-// Market orders, price is not checked, orders are filled automatically
-void MatchingEngine::match(Order& order)
+void MatchingEngine::match(Order& incoming)
 {
-    if (order.getType() == OrderType::MARKET)
-    {
-        matchMarket(order);
-    }
+    incoming.isMarket() ? matchMarket(incoming) : matchLimit(incoming);
 }
 
 void MatchingEngine::matchMarket(Order& incoming)
@@ -35,27 +31,58 @@ void MatchingEngine::matchMarket(Order& incoming)
         if (m_ob->isOppositeEmpty(incoming.getSide()))
         {
             m_ob->addOrder(incoming);
-            return;
+            break;
         }
-        // getBestPrice returns opposite book
-        auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
-        Order& resting       = bestPriceIter->second.front();
-
-        const Price    price       = bestPriceIter->first;
-        const Quantity incomingQty = incoming.getQuantity();
-        const Quantity restingQty  = resting.getQuantity();
-        const Quantity takeQty     = std::min(incomingQty, restingQty);
-
-        createTrade(incoming, resting, price, takeQty);
-
-        resting.reduceQuantity(takeQty);
-        incoming.reduceQuantity(takeQty);
-
-        if (resting.isFilled())
+        matchOnce(incoming);
+    }
+}
+void MatchingEngine::matchLimit(Order& incoming)
+{
+    while (incoming.getQuantity() > 0)
+    {
+        if (priceCrosses(incoming, m_currentPrice))
         {
-            m_ob->removeOrder(resting.getID());
-            setCurrentPrice(price);
+            matchOnce(incoming);
         }
+        else
+        {
+            m_ob->addOrder(incoming);
+            break;
+        }
+    }
+}
+
+void MatchingEngine::matchOnce(Order& incoming)
+{
+    auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
+    Order& resting       = bestPriceIter->second.front();
+
+    const Price    price       = bestPriceIter->first;
+    const Quantity incomingQty = incoming.getQuantity();
+    const Quantity restingQty  = resting.getQuantity();
+    const Quantity takeQty     = std::min(incomingQty, restingQty);
+
+    createTrade(incoming, resting, price, takeQty);
+    setCurrentPrice(price);
+
+    resting.reduceQuantity(takeQty);
+    incoming.reduceQuantity(takeQty);
+
+    if (resting.isFilled())
+    {
+        m_ob->removeOrder(resting.getID());
+    }
+}
+
+bool MatchingEngine::priceCrosses(const Order& order, Price currentPrice)
+{
+    if (order.isBuy())
+    {
+        return order.getPrice() >= currentPrice;
+    }
+    else
+    {  // Side::SELL
+        return order.getPrice() <= currentPrice;
     }
 }
 

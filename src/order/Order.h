@@ -34,10 +34,11 @@ const std::map<OrderType, std::string_view> typeMap = {{OrderType::MARKET, "MARK
                                                        {OrderType::LIMIT, "LIMIT"}};
 
 using std::cout, std::endl;
-using Time = std::chrono::system_clock;
 
+using Time     = std::chrono::system_clock;
 using Price    = uint32_t;
 using Quantity = uint32_t;
+
 class Order
 {
  public:
@@ -60,7 +61,7 @@ class Order
     {
         if (takeQty > m_quantity)
             throw std::logic_error(
-                std::format("Error: cant have takeQty bigger than quantity{}", getQuantity()));
+                std::format("Error: cant have takeQty bigger than quantity:{}", getQuantity()));
         m_quantity -= takeQty;
     }
 
@@ -73,6 +74,10 @@ class Order
     bool isFilled() const { return m_quantity == 0; }
     bool isLimit() const { return OrderType::LIMIT == m_type; }
     bool isMarket() const { return OrderType::MARKET == m_type; }
+
+    // TODO: may remove but keeping for readability for now
+    bool isBuy() const { return Side::BUY == m_side; }
+    bool isSell() const { return Side::SELL == m_side; }
 
     void printDetails() const
     {
