@@ -56,6 +56,8 @@ void MatchingEngine::matchLimit(Order& incoming)
 
 void MatchingEngine::matchOnce(Order& incoming)
 {
+    if (m_ob->isOppositeEmpty(incoming.getSide())) return;
+
     auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
     Order& resting       = bestPriceIter->second.front();
 
