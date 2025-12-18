@@ -30,7 +30,6 @@ void MatchingEngine::matchMarket(Order& incoming)
     {
         if (m_ob->isOppositeEmpty(incoming.getSide()))
         {
-            m_ob->addOrder(incoming);
             break;
         }
         matchOnce(incoming);
@@ -40,7 +39,10 @@ void MatchingEngine::matchLimit(Order& incoming)
 {
     while (incoming.getQuantity() > 0)
     {
-        if (priceCrosses(incoming, m_currentPrice))
+        auto  bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
+        Price bestPrice     = bestPriceIter->first;
+
+        if (priceCrosses(incoming, bestPrice))
         {
             matchOnce(incoming);
         }
