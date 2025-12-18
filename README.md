@@ -16,4 +16,12 @@ For the data structure that stores the Orders I dececided to use std::unordered_
 
 To learn:
 
-Order duration type, Fill and Kill, good till cancelled
+Order duration type, Fill and Kill, good till cancelled etc
+
+
+
+TODO:
+
+Add UT
+Add marketOrder queue to allow market orders to wait for ones with higher priority
+Add in Users to submit market orders - Auto gen and randomly add at certain time intervals to simulate real market
