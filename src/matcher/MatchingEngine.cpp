@@ -39,25 +39,26 @@ void MatchingEngine::matchLimit(Order& incoming)
 {
     while (incoming.getQuantity() > 0)
     {
-        auto  bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
-        Price bestPrice     = bestPriceIter->first;
+        if (m_ob->isOppositeEmpty(incoming.getSide())) break;
 
-        if (priceCrosses(incoming, bestPrice))
+        auto  bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
+        Price bestOpPrice   = bestPriceIter->first;
+
+        if (!priceCrosses(incoming, bestOpPrice))
         {
-            matchOnce(incoming);
-        }
-        else
-        {
-            m_ob->addOrder(incoming);
             break;
         }
+        matchOnce(incoming);
+    }
+
+    if (!incoming.isFilled())
+    {
+        m_ob->addOrder(incoming);
     }
 }
 
 void MatchingEngine::matchOnce(Order& incoming)
 {
-    if (m_ob->isOppositeEmpty(incoming.getSide())) return;
-
     auto   bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
     Order& resting       = bestPriceIter->second.front();
 
