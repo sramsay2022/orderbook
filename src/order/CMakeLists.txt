@@ -11,3 +11,7 @@ target_include_directories(order
 target_link_libraries(order
     PUBLIC
     util)
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()

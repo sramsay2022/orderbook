@@ -1,18 +1,37 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(orderBook VERSION 0.1.0 LANGUAGES C CXX)
 
-# Set C++ standard
+### Set C++ standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Needed for clangd
+
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic)
 # add_compile_options(-Werror)
 add_compile_options(-g -O0 -fno-omit-frame-pointer -fstandalone-debug) 
 
-# Set the output directories for the all binarys
+### Set the output directories for the all binarys
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include(CTest)
+if (BUILD_TESTING)
+
+    enable_testing()
+    include(FetchContent)
+
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
+    )
+
+    FetchContent_MakeAvailable(googletest)
+
+endif()
+
+
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -23,4 +42,5 @@ add_subdirectory(src/matcher)
 target_link_libraries(${PROJECT_NAME}
     util
     matcher
+    order
 )
