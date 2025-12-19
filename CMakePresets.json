@@ -3,7 +3,7 @@
     "configurePresets": [
         {
             "name": "default",
-            "displayName": "Matcher (Homebrew Clang)",
+            "displayName": "Matching Engine (Homebrew Clang)",
             "binaryDir": "build",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
@@ -14,7 +14,7 @@
         },
         {
             "name": "tests",
-            "displayName": "Tests (Homebrew Clang)",
+            "displayName": "Tests (Apple Clang)",
             "binaryDir": "build_tests",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "/usr/bin/clang",
@@ -27,11 +27,13 @@
     "buildPresets": [
         {
             "name": "default",
-            "configurePreset": "default"
+            "configurePreset": "default",
+            "cleanFirst": true
         },
         {
             "name": "tests",
-            "configurePreset": "tests"
+            "configurePreset": "tests",
+            "cleanFirst": true
         }
     ],
     "testPresets": [

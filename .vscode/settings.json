@@ -64,5 +64,6 @@
     "editor.formatOnSave": true,
     "[cpp]": {
         "editor.defaultFormatter": "xaver.clang-format"
-    }
+    },
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"
 }
