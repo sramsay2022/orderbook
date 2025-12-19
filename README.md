@@ -17,6 +17,7 @@ Testing:
 
 GTest does not support brew clang so I have built the unit tests with apple clang instead. The .vscode folder should apply all the correct settings to enable this. If you cannot build Debug then run 'brew install clang'
 
+To get clangd to index either build, you need to change the configuration in cmake tools
 
 To learn:
 
