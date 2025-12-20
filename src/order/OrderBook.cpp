@@ -14,7 +14,7 @@ void OrderBook::addOrder(const Order& order)
     bucket.push_back(order);
 
     auto iter = std::prev(bucket.end());
-    ledger.emplace(order.getID(), OrderLocator{price, side, iter});
+    ledger.emplace(order.getID(), OrderLocator{iter, price, side});
 }
 
 void OrderBook::removeOrder(const long long id)

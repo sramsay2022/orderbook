@@ -1,7 +1,6 @@
 #include "MatchingEngine.h"
 
-#include <memory>
-#include <utility>
+#include <algorithm>
 
 #include "Order.h"
 

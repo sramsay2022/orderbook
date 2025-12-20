@@ -10,6 +10,8 @@ add_compile_options(-Wall -Wextra -Wpedantic)
 # add_compile_options(-Werror)
 add_compile_options(-g -O0 -fno-omit-frame-pointer -fstandalone-debug) 
 
+
+
 ### Set the output directories for the all binarys
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -25,6 +27,7 @@ if (BUILD_TESTING)
         GIT_TAG v1.14.0
     )
     FetchContent_MakeAvailable(googletest)
+    add_compile_definitions(UNIT_TEST)
 endif()
 
 add_executable(${PROJECT_NAME} main.cpp)

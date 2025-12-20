@@ -12,3 +12,7 @@ target_link_libraries(matcher
     PUBLIC
     order
     )
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()

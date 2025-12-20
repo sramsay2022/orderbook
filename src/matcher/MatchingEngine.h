@@ -15,17 +15,18 @@ class MatchingEngine
         : m_ob{orderBook} {};
 
     void match(Order& order);
+
+    void listTrades();
+
+ private:
     void matchMarket(Order& order);
     void matchLimit(Order& order);
+    void matchOnce(Order& order);
 
     bool priceCrosses(const Order& o, Price currentPrice);
     void setCurrentPrice(const Price price) { m_currentPrice = price; }
 
     void createTrade(const Order& o1, const Order& o2, const Price price, const Quantity quantity);
-    void listTrades();
-
- private:
-    void matchOnce(Order& order);
 
  private:
     std::shared_ptr<OrderBook> m_ob{};

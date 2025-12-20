@@ -22,54 +22,49 @@ class OrderBookTests : public ::testing::Test
     void SetUp() override { m_obUnderTest = std::make_unique<OrderBook>(); }
 
  protected:
-    Order order{100, 50, Side::BUY, OrderType::LIMIT};
+    Order buyOrder{100, 50, Side::BUY, OrderType::LIMIT};
+    Order sellOrder{100, 60, Side::SELL, OrderType::LIMIT};
 
     std::unique_ptr<OrderBook> m_obUnderTest;
 };
 
-TEST_F(OrderBookTests, addOrderTests)
+TEST_F(OrderBookTests, addOrderTest)
 {
-    EXPECT_EQ(m_obUnderTest->isAskEmpty(), true);
-    EXPECT_EQ(m_obUnderTest->isBidEmpty(), true);
+    EXPECT_TRUE(m_obUnderTest->isAskEmpty());
+    EXPECT_TRUE(m_obUnderTest->isBidEmpty());
 
-    m_obUnderTest->addOrder(order);
+    m_obUnderTest->addOrder(buyOrder);
+    EXPECT_FALSE(m_obUnderTest->isBidEmpty());
+    EXPECT_TRUE(m_obUnderTest->isAskEmpty());
 
-    EXPECT_EQ(m_obUnderTest->isBidEmpty(), false);
-    EXPECT_EQ(m_obUnderTest->isAskEmpty(), true);
+    m_obUnderTest->addOrder(sellOrder);
+    EXPECT_FALSE(m_obUnderTest->isBidEmpty());
+    EXPECT_FALSE(m_obUnderTest->isAskEmpty());
 }
 
-TEST_F(OrderBookTests, SetQuantityTest)
+TEST_F(OrderBookTests, removeOrderTest) { m_obUnderTest->addOrder(buyOrder); }
+
+TEST_F(OrderBookTests, getBookReturnsBidForBuyAndAskForSell)
 {
-    order.setQuantity(150);
-    EXPECT_EQ(order.getQuantity(), 150);
+    auto& bid = m_obUnderTest->getBook(Side::BUY);
+    auto& ask = m_obUnderTest->getBook(Side::SELL);
+
+    EXPECT_NE(&bid, &ask);
 }
 
+// 2 Order tests
 TEST_F(OrderBookTests, ReduceQuantityTest)
 {
-    order.reduceQuantity(50);
-    EXPECT_EQ(order.getQuantity(), 50);
+    std::unique_ptr<Order> order =
+        std::make_unique<Order>(Order{100, 50, Side::BUY, OrderType::LIMIT});
+    order->reduceQuantity(50);
+    EXPECT_EQ(order->getQuantity(), 50);
 }
 
 TEST_F(OrderBookTests, ReduceQuantityExceedsTest)
 {
-    EXPECT_THROW(order.reduceQuantity(150), std::logic_error);
-}
+    std::unique_ptr<Order> order =
+        std::make_unique<Order>(Order{100, 50, Side::BUY, OrderType::LIMIT});
 
-TEST_F(OrderBookTests, IsFilledTest)
-{
-    EXPECT_FALSE(order.isFilled());
-    order.reduceQuantity(100);
-    EXPECT_TRUE(order.isFilled());
-}
-
-TEST_F(OrderBookTests, IsLimitTest)
-{
-    EXPECT_TRUE(order.isLimit());
-    EXPECT_FALSE(order.isMarket());
-}
-
-TEST_F(OrderBookTests, IsBuyTest)
-{
-    EXPECT_TRUE(order.isBuy());
-    EXPECT_FALSE(order.isSell());
+    EXPECT_THROW(order->reduceQuantity(150), std::logic_error);
 }

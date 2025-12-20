@@ -10,6 +10,10 @@
 class OrderBook
 {
  public:
+#ifdef UNIT_TEST
+    explicit OrderBook(int x) { std::cout << "Hello " << std::endl; };
+#endif
+
     OrderBook() = default;
 
     void showOrders();
@@ -47,10 +51,10 @@ class OrderBook
 
     struct OrderLocator
     {
+        std::list<Order>::iterator iter;
+
         Price price;
         Side  side;
-
-        std::list<Order>::iterator iter;
     };
     std::unordered_map<long long, OrderLocator> ledger;
 };
