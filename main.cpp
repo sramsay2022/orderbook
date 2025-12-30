@@ -5,6 +5,7 @@
 #include "OrderBook.h"
 #include "OrderGenerator.h"
 #include "Timer.h"
+#include "Types.h"
 
 using std::cout, std::endl;
 
@@ -17,7 +18,7 @@ int main()
     // Fill the order book with limit orders
     auto newOrders = OrderGenerator::generateSampleOrders();
 
-    for (const auto ord : newOrders)
+    for (auto& ord : newOrders)
     {
         orderBook->addOrder(ord);
     }
@@ -26,11 +27,11 @@ int main()
     Timer t;
     Order o{100, 90, Side::SELL, OrderType::MARKET};
     matcher.match(o);
-    cout << "Time elapsed: " << t.elapsed_ns() << endl;
+    cout << "Time elapsed: " << t.elapsed_ssms() << endl;
     t.reset();
     Order o2{10000, 104, Side::BUY, OrderType::LIMIT};
     matcher.match(o2);
-    cout << "Time elapsed: " << t.elapsed_ns() << endl;
+    cout << "Time elapsed: " << t.elapsed_ssms() << endl;
     matcher.listTrades();
     cout << endl;
 

@@ -1,45 +1,12 @@
 #ifndef FF82AEC3_EE59_4C0D_A698_822F76DEC3D9
 #define FF82AEC3_EE59_4C0D_A698_822F76DEC3D9
 
-#include <chrono>
-#include <cstdint>
+#include <atomic>
 #include <format>
 #include <iostream>
-#include <map>
 #include <stdexcept>
-#include <string_view>
 
-/*
-    Notes:
-    - enum class avoids implicit conversion to int (reduce bugs)
-    - uint8_t sets the type to 8bits instead of 4bytes which default
-    - Use string_view as it is read only and no need to alocate
-
-    @TODO Use random number generator rather than sequential for ID
-*/
-
-enum class Side : uint8_t
-{
-    BUY,
-    SELL
-};
-
-enum class OrderType : uint8_t
-{
-    MARKET,
-    LIMIT
-};
-
-const std::map<Side, std::string_view>      sideMap = {{Side::BUY, "BUY"}, {Side::SELL, "SELL"}};
-const std::map<OrderType, std::string_view> typeMap = {{OrderType::MARKET, "MARKET"},
-                                                       {OrderType::LIMIT, "LIMIT"}};
-
-using std::cout, std::endl;
-
-using ID       = uint64_t;
-using Time     = std::chrono::system_clock;
-using Price    = uint32_t;
-using Quantity = uint32_t;
+#include "Types.h"
 
 struct OrderID
 {
@@ -68,6 +35,9 @@ class Order
         , m_price{price}
         , m_side{side}
         , m_type(type) {};
+
+    Order(Quantity quantity, Side side)
+        : Order(quantity, Constants::InvalidPrice, side, OrderType::MARKET) {};
 
     ~Order() = default;
 
@@ -98,8 +68,8 @@ class Order
 
     void printDetails() const
     {
-        cout << "m_ID: " << m_ID << ", Quantity: " << m_quantity << " @ " << m_price
-             << ", Side: " << sideMap.at(m_side) << endl;
+        std::cout << std::format("m_ID: {}, Qty: {} @ {}, Side: {}\n", m_ID, m_quantity, m_price,
+                                 sideMap.at(m_side));
     }
 
  private:
@@ -125,8 +95,9 @@ struct Trade
 
     void printDetails() const
     {
-        cout << "m_tradeId: " << m_tradeId << ", Quantity: " << m_quantity << " @ " << m_price
-             << " SellOrderId: " << m_sellOrderId << " BuyOrderId: " << m_buyOrderId << endl;
+        std::cout << std::format(
+            "m_tradeId: {}, Quantity: {} @ {}, SellOrderId: {}, BuyOrderId: {}\n", m_tradeId,
+            m_quantity, m_price, m_sellOrderId, m_buyOrderId);
     }
 
     ID m_tradeId{};

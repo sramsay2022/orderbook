@@ -2,6 +2,8 @@
 #define F3D0AFE6_8B2E_44F5_92B9_3F941042C8A2
 
 #include <chrono>
+#include <format>
+#include <string>
 
 class Timer
 {
@@ -31,17 +33,15 @@ class Timer
 
     std::string elapsed_ssms() const
     {
+        using namespace std::chrono;
+
         auto dur = Clock::now() - m_beg;
 
-        using seconds = std::chrono::seconds;
-        using millis  = std::chrono::milliseconds;
-        using nano    = std::chrono::nanoseconds;
+        const auto s  = duration_cast<seconds>(dur).count();
+        const auto ms = (duration_cast<milliseconds>(dur) % 1000).count();
+        const auto ns = (duration_cast<nanoseconds>(dur) % 1'000'000).count();
 
-        const auto s  = std::chrono::duration_cast<seconds>(dur);
-        const auto ms = std::chrono::duration_cast<millis>(dur - s);
-        const auto ns = std::chrono::duration_cast<nano>(dur - s - ms);
-
-        return std::format("Time Elapsed: {:02}:{:02}:{:02}", s.count(), ms.count(), ns.count());
+        return std::format("Elapsed: {}s {}ms {}ns", s, ms, ns);
     }
 };
 

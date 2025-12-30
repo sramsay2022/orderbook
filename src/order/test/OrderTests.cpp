@@ -7,14 +7,6 @@
 
 /*  void addOrder(const Order& order);
     void removeOrder(const long long id);
-
-    auto& getBook(const Side side) { return (side == Side::BUY) ? m_bid : m_ask; }
-    int peekBestBid() const { return std::prev(m_bid.end())->first; }
-    int peekBestAsk() const { return m_ask.begin()->first; }
-    bool isBidEmpty() const { return m_bid.empty(); }
-    bool isAskEmpty() const { return m_ask.empty(); }
-    auto getBestBid() { return std::prev(m_bid.end()); }
-    auto getBestAsk() { return m_ask.begin(); }
 */
 
 class OrderBookTests : public ::testing::Test
@@ -42,7 +34,25 @@ TEST_F(OrderBookTests, addOrderTest)
     EXPECT_FALSE(m_obUnderTest->isAskEmpty());
 }
 
-TEST_F(OrderBookTests, removeOrderTest) { m_obUnderTest->addOrder(buyOrder); }
+TEST_F(OrderBookTests, removeOrderTest)
+{
+    m_obUnderTest->addOrder(buyOrder);
+    m_obUnderTest->addOrder(sellOrder);
+
+    ASSERT_FALSE(m_obUnderTest->isBidEmpty());
+    ASSERT_FALSE(m_obUnderTest->isAskEmpty());
+
+    m_obUnderTest->removeOrder(buyOrder.getID());
+    EXPECT_TRUE(m_obUnderTest->isBidEmpty());
+    EXPECT_FALSE(m_obUnderTest->isAskEmpty());
+
+    m_obUnderTest->removeOrder(sellOrder.getID());
+    EXPECT_TRUE(m_obUnderTest->isBidEmpty());
+    EXPECT_TRUE(m_obUnderTest->isAskEmpty());
+
+    // Removing again should be a no-op and not throw
+    EXPECT_NO_THROW(m_obUnderTest->removeOrder(buyOrder.getID()));
+}
 
 TEST_F(OrderBookTests, getBookReturnsBidForBuyAndAskForSell)
 {

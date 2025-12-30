@@ -6,20 +6,28 @@
 #include <unordered_map>
 
 #include "Order.h"
+#include "Types.h"
 
 class OrderBook
 {
  public:
 #ifdef UNIT_TEST
-    explicit OrderBook(int x) { std::cout << "Hello " << std::endl; };
+    // TODO test directly adding into orderbook for removeOrderTests
+    explicit OrderBook(std::vector<Order>& orders)
+    {
+        for (auto& o : orders)
+        {
+            m_ask.at(o.getPrice());
+        }
+    };
 #endif
 
     OrderBook() = default;
 
     void showOrders();
 
-    void addOrder(const Order& order);
-    void removeOrder(const long long id);
+    void addOrder(Order order);
+    void removeOrder(const ID id);
 
     auto& getBook(const Side side) { return (side == Side::BUY) ? m_bid : m_ask; }
 

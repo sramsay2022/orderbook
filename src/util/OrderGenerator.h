@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Order.h"
+#include "Types.h"
 
 struct OrderGenerator
 {

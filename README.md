@@ -28,4 +28,5 @@ Order duration type, Fill and Kill, good till cancelled etc
 TODO:
 
 Add marketOrder queue to allow market orders to wait for ones with higher priority
+
 Add in Users to submit market orders - Auto gen and randomly add at certain time intervals to simulate real market

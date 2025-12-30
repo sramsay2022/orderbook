@@ -1,23 +1,23 @@
 #include "OrderBook.h"
 
-#include <cassert>
-
 #include "Order.h"
+#include "Types.h"
 
-void OrderBook::addOrder(const Order& order)
+void OrderBook::addOrder(Order order)
 {
+    const ID    id    = order.getID();
     const Price price = order.getPrice();
     const Side  side  = order.getSide();
 
     auto& book   = getBook(side);
     auto& bucket = book[price];
-    bucket.push_back(order);
+    bucket.push_back(std::move(order));
 
     auto iter = std::prev(bucket.end());
-    ledger.emplace(order.getID(), OrderLocator{iter, price, side});
+    ledger.emplace(id, OrderLocator{iter, price, side});
 }
 
-void OrderBook::removeOrder(const long long id)
+void OrderBook::removeOrder(const ID id)
 {
     auto it = ledger.find(id);
     if (it == ledger.end()) return;

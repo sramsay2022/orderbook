@@ -7,6 +7,7 @@
 
 #include "Order.h"
 #include "OrderBook.h"
+#include "Types.h"
 
 class MatchingEngine
 {
