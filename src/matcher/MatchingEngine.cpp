@@ -29,6 +29,7 @@ void MatchingEngine::matchMarket(Order& incoming)
     {
         if (m_ob->isOppositeEmpty(incoming.getSide()))
         {
+            printf("No order to match with on opposite side");
             break;
         }
         matchOnce(incoming);
@@ -38,7 +39,11 @@ void MatchingEngine::matchLimit(Order& incoming)
 {
     while (incoming.getQuantity() > 0)
     {
-        if (m_ob->isOppositeEmpty(incoming.getSide())) break;
+        if (m_ob->isOppositeEmpty(incoming.getSide()))
+        {
+            printf("No order to match with on opposite side");
+            break;
+        }
 
         auto  bestPriceIter = m_ob->getOppositeBestPrice(incoming.getSide());
         Price bestOpPrice   = bestPriceIter->first;
@@ -78,15 +83,15 @@ void MatchingEngine::matchOnce(Order& incoming)
     }
 }
 
-bool MatchingEngine::priceCrosses(const Order& order, Price currentPrice)
+bool MatchingEngine::priceCrosses(const Order& order, Price currentBestPrice)
 {
     if (order.isBuy())
     {
-        return order.getPrice() >= currentPrice;
+        return order.getPrice() >= currentBestPrice;
     }
     else
     {  // Side::SELL
-        return order.getPrice() <= currentPrice;
+        return order.getPrice() <= currentBestPrice;
     }
 }
 

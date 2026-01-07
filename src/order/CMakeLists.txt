@@ -1,12 +1,12 @@
 set(Sources
-    OrderBook.cpp
+    src/OrderBook.cpp
 )
 
 add_library(order ${Sources})
 
 target_include_directories(order 
     PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR})
+    ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 target_link_libraries(order
     PUBLIC

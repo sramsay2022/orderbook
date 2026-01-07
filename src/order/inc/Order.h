@@ -30,7 +30,7 @@ class Order
  public:
     Order() = delete;
     Order(Quantity quantity, Price price, Side side, OrderType type)
-        : m_ID(OrderID::genId())
+        : m_ID{OrderID::genId()}
         , m_quantity{quantity}
         , m_price{price}
         , m_side{side}
@@ -43,9 +43,9 @@ class Order
 
     ID               getID() const { return m_ID; }
     Price            getPrice() const { return m_price; }
-    Time::time_point getTime() const { return m_timestamp; }
     Side             getSide() const { return m_side; }
     OrderType        getType() const { return m_type; }
+    Time::time_point getTime() const { return m_timestamp; }
 
     Quantity getQuantity() const { return m_quantity; }
     void     setQuantity(Quantity x) { m_quantity = x; }

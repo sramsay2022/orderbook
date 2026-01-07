@@ -64,7 +64,7 @@ class OrderBook
         Price price;
         Side  side;
     };
-    std::unordered_map<long long, OrderLocator> ledger;
+    std::unordered_map<Price, OrderLocator> ledger;
 };
 
 #endif /* DD464386_82F4_4916_9C97_26F8B65EC003 */
