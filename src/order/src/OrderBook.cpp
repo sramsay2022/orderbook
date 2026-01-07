@@ -14,13 +14,13 @@ void OrderBook::addOrder(Order order)
     bucket.push_back(std::move(order));
 
     auto iter = std::prev(bucket.end());
-    ledger.emplace(id, OrderLocator{iter, price, side});
+    m_ledger.emplace(id, OrderLocator{iter, price, side});
 }
 
 void OrderBook::removeOrder(const ID id)
 {
-    auto it = ledger.find(id);
-    if (it == ledger.end()) return;
+    auto it = m_ledger.find(id);
+    if (it == m_ledger.end()) return;
 
     auto& loc    = it->second;
     auto& book   = getBook(loc.side);
@@ -36,7 +36,7 @@ void OrderBook::removeOrder(const ID id)
     }
 
     // Erase ledger entry
-    ledger.erase(id);
+    m_ledger.erase(id);
 }
 
 void OrderBook::showOrders()

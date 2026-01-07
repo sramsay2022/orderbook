@@ -29,6 +29,7 @@ enum class OrderType : uint8_t
     LIMIT
 };
 
+// For readability with print statements, not actually needed, may remove
 const std::map<Side, std::string_view>      sideMap = {{Side::BUY, "BUY"}, {Side::SELL, "SELL"}};
 const std::map<OrderType, std::string_view> typeMap = {{OrderType::MARKET, "MARKET"},
                                                        {OrderType::LIMIT, "LIMIT"}};
