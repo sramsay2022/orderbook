@@ -32,6 +32,7 @@ class Order
     Order(Quantity quantity, Price price, Side side, OrderType type)
         : m_ID{OrderID::genId()}
         , m_quantity{quantity}
+        , m_initialQuantity{quantity}
         , m_price{price}
         , m_side{side}
         , m_type(type) {};
@@ -68,13 +69,14 @@ class Order
 
     void printDetails() const
     {
-        std::cout << std::format("m_ID: {}, Qty: {} @ {}, Side: {}\n", m_ID, m_quantity, m_price,
-                                 sideMap.at(m_side));
+        std::cout << std::format("m_ID: {}, Qty: {} @ {}, Side: {}\n", m_ID, m_initialQuantity,
+                                 m_price, sideMap.at(m_side));
     }
 
  private:
     ID              m_ID{};
     Quantity        m_quantity{};
+    const Quantity  m_initialQuantity{};
     const Price     m_price{};  // Price in cents
     const Side      m_side{};
     const OrderType m_type{};
@@ -100,8 +102,7 @@ struct Trade
             m_quantity, m_price, m_sellOrderId, m_buyOrderId);
     }
 
-    ID m_tradeId{};
-
+    ID             m_tradeId{};
     const ID       m_buyOrderId{};
     const ID       m_sellOrderId{};
     const Price    m_price{};

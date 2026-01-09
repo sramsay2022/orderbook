@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <memory>
-
 #include "Order.h"
 #include "OrderBook.h"
 
