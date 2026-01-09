@@ -12,8 +12,9 @@ struct OrderID
 {
     static ID genId()
     {
+        // Relaxed as only need uniqueness, not ordering/visibility of other data
         static std::atomic<ID> id{1};
-        return id.fetch_add(1);
+        return id.fetch_add(1, std::memory_order_relaxed);
     }
 };
 struct TradeID
@@ -21,7 +22,7 @@ struct TradeID
     static ID genId()
     {
         static std::atomic<ID> id{1};
-        return id.fetch_add(1);
+        return id.fetch_add(1, std::memory_order_relaxed);
     }
 };
 
@@ -84,11 +85,11 @@ class Order
 struct Trade
 {
     explicit Trade(ID buyId, ID sellId, Price p, Quantity q)
-        : m_tradeId(TradeID::genId())
-        , m_buyOrderId(buyId)
-        , m_sellOrderId(sellId)
-        , m_price(p)
-        , m_quantity(q)
+        : m_tradeId{TradeID::genId()}
+        , m_buyOrderId{buyId}
+        , m_sellOrderId{sellId}
+        , m_price{p}
+        , m_quantity{q}
     {
     }
 
