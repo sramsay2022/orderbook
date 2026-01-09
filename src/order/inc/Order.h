@@ -28,8 +28,7 @@ struct TradeID
 class Order
 {
  public:
-    Order() = delete;
-    Order(Quantity quantity, Price price, Side side, OrderType type)
+    explicit Order(Quantity quantity, Price price, Side side, OrderType type)
         : m_ID{OrderID::genId()}
         , m_quantity{quantity}
         , m_initialQuantity{quantity}
@@ -37,10 +36,8 @@ class Order
         , m_side{side}
         , m_type(type) {};
 
-    Order(Quantity quantity, Side side)
+    explicit Order(Quantity quantity, Side side)
         : Order(quantity, Constants::InvalidPrice, side, OrderType::MARKET) {};
-
-    ~Order() = default;
 
     ID               getID() const { return m_ID; }
     Price            getPrice() const { return m_price; }
@@ -86,7 +83,7 @@ class Order
 
 struct Trade
 {
-    Trade(ID buyId, ID sellId, Price p, Quantity q)
+    explicit Trade(ID buyId, ID sellId, Price p, Quantity q)
         : m_tradeId(TradeID::genId())
         , m_buyOrderId(buyId)
         , m_sellOrderId(sellId)
