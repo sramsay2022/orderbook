@@ -11,17 +11,6 @@
 class OrderBook
 {
  public:
-#ifdef UNIT_TEST
-    // TODO test directly adding into orderbook for removeOrderTests
-    explicit OrderBook(std::vector<Order>& orders)
-    {
-        for (auto& o : orders)
-        {
-            m_ask.at(o.getPrice());
-        }
-    };
-#endif
-
     OrderBook() = default;
 
     void showOrders();
@@ -64,7 +53,7 @@ class OrderBook
         Price price;
         Side  side;
     };
-    std::unordered_map<Price, OrderLocator> m_ledger;
+    std::unordered_map<ID, OrderLocator> m_ledger;
 };
 
 #endif /* DD464386_82F4_4916_9C97_26F8B65EC003 */

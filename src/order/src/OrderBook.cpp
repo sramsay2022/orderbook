@@ -10,7 +10,7 @@ void OrderBook::addOrder(Order order)
     const Side  side  = order.getSide();
 
     auto& book   = getBook(side);
-    auto& bucket = book[price];
+    auto& bucket = book.at(price);
     bucket.push_back(std::move(order));
 
     auto iter = std::prev(bucket.end());

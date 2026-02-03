@@ -33,11 +33,13 @@ endif()
 add_executable(${PROJECT_NAME} main.cpp)
 
 add_subdirectory(src/order)
-add_subdirectory(src/util)
 add_subdirectory(src/matcher)
+add_subdirectory(lib/network)
+add_subdirectory(lib/util)
 
 target_link_libraries(${PROJECT_NAME}
     util
     matcher
     order
+    Server
 )

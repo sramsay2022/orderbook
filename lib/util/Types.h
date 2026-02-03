@@ -6,9 +6,9 @@
 #include <string_view>
 
 using ID       = uint64_t;
-using Time     = std::chrono::system_clock;
 using Price    = uint32_t;
 using Quantity = uint32_t;
+using Time     = std::chrono::system_clock;
 
 // Used for Market Orders
 struct Constants

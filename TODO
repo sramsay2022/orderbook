@@ -1,0 +1,6 @@
+Conan packages to use:
+    gRPC
+    spdlog
+    conan
+    cmake
+    
